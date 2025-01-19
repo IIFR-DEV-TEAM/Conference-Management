@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { User, Mail, Lock, ArrowRight } from 'lucide-react'
 import { ReCaptcha } from '@/components/ReCaptcha'
 
-export default function Register() {
+const Register = () =>{
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -110,3 +110,4 @@ export default function Register() {
   )
 }
 
+export default Register

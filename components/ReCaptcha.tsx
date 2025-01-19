@@ -2,6 +2,10 @@
 
 import { useEffect } from 'react'
 import Script from 'next/script'
+import dotenv from "dotenv"
+
+dotenv.config()
+
 
 declare global {
   interface Window {
@@ -19,7 +23,7 @@ export function ReCaptcha({ onVerify }: ReCaptchaProps) {
     window.onRecaptchaLoad = () => {
       window.grecaptcha.ready(() => {
         window.grecaptcha.render('recaptcha-container', {
-          sitekey: 'YOUR_RECAPTCHA_SITE_KEY', // Replace with your actual site key
+          sitekey: 'YOUR_RECAPTCHA_SITE_KEY',
           callback: onVerify,
         });
       });
