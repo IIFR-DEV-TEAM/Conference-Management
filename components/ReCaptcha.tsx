@@ -1,40 +1,26 @@
-'use client'
+'use-client'
 
-import { useEffect } from 'react'
-import Script from 'next/script'
+import { useRef } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 
-declare global {
-  interface Window {
-    grecaptcha: any;
-    onRecaptchaLoad: () => void;
-  }
+interface Props {
+  onVerify: (token: string | null) => void;
 }
 
-interface ReCaptchaProps {
-  onVerify: (token: string) => void;
-}
+const ReCaptcha = ({onVerify}:Props) =>{
+  const captchaRef = useRef<ReCAPTCHA>(null);
 
-export function ReCaptcha({ onVerify }: ReCaptchaProps) {
-  useEffect(() => {
-    window.onRecaptchaLoad = () => {
-      window.grecaptcha.ready(() => {
-        window.grecaptcha.render('recaptcha-container', {
-          sitekey: 'YOUR_RECAPTCHA_SITE_KEY', // Replace with your actual site key
-          callback: onVerify,
-        });
-      });
-    };
-  }, [onVerify]);
-
+  const handleChange = (token: string | null) => {
+    onVerify(token);
+  };
   return (
-    <>
-      <Script
-        src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit"
-        async
-        defer
+    <div className="my-4">
+      <ReCAPTCHA
+        ref={captchaRef}
+        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+        onChange={handleChange}
       />
-      <div id="recaptcha-container" className="mt-4"></div>
-    </>
+    </div>
   );
 }
-
+export {ReCaptcha}
