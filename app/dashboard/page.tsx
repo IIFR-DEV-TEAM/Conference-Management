@@ -1,63 +1,41 @@
-// filepath: /app/dashboard/page.tsx
-"use client"
+import type { Metadata } from "next"
+import DashboardContent from "@/components/dashboard-content"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { DarkModeToggle } from "@/components/DarkModeToggle"
-import { getSession } from "@/lib/session"
-
-interface Conference {
-  id: string
-  name: string
-  role: "attendee" | "speaker"
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Conference Management Dashboard",
 }
 
-export default function Dashboard() {
-  const [user, setUser] = useState<any>(null)
-  const [conferences, setConferences] = useState<Conference[]>([])
-  const router = useRouter()
-  const supabase = createBrowserSupabaseClient()
-
-  useEffect(() => {
-    async function fetchUserData() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) {
-        router.push("/login")
-      } else {
-        setUser(user)
-        // In a real app, you'd fetch the user's conferences from Supabase
-        setConferences([
-          { id: "1", name: "Tech Conference 2023", role: "attendee" },
-          { id: "2", name: "Science Symposium", role: "speaker" },
-        ])
-      }
-    }
-
-    fetchUserData()
-  }, [supabase, router])
-
+export default function DashboardPage() {
   return (
-    <div>
-      <DarkModeToggle />
-      <Card>
-        <CardHeader>
-          <CardTitle>Welcome, {user?.email}</CardTitle>
-          <CardDescription>Your Conferences</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {conferences.map((conference) => (
-            <div key={conference.id}>
-              <h2>{conference.name}</h2>
-              <p>Role: {conference.role}</p>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <div className="md:hidden">
+        <img
+          src="/examples/dashboard-light.png"
+          width={1280}
+          height={866}
+          alt="Dashboard"
+          className="block dark:hidden"
+        />
+        <img
+          src="/examples/dashboard-dark.png"
+          width={1280}
+          height={866}
+          alt="Dashboard"
+          className="hidden dark:block"
+        />
+      </div>
+      <div className="hidden flex-col md:flex">
+        <div className="border-b">
+          <div className="flex h-16 items-center px-4">
+            <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          </div>
+        </div>
+        <div className="flex-1 space-y-4 p-8 pt-6">
+          <DashboardContent />
+        </div>
+      </div>
+    </>
   )
 }
+
