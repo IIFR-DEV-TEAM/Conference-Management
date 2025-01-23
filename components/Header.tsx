@@ -1,7 +1,13 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { useTheme } from "next-themes"
+import { Moon, Sun } from "lucide-react"
 
 export default function Header() {
+  const { theme, setTheme } = useTheme()
+
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
@@ -34,7 +40,18 @@ export default function Header() {
               </Link>
             </div>
           </div>
-          <div className="ml-10 space-x-4">
+          <div className="ml-10 space-x-4 flex items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Toggle Theme"
+              className="w-9 h-9 px-0"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle Theme</span>
+            </Button>
             <Link href="/login">
               <Button
                 variant="outline"
@@ -74,4 +91,3 @@ export default function Header() {
     </header>
   )
 }
-

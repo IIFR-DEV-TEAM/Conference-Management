@@ -38,19 +38,6 @@ export default function Hero() {
               </div>
             </div>
           </main>
-          <div className="absolute top-4 right-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Toggle Theme"
-              className="w-9 h-9 px-0"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle Theme</span>
-            </Button>
-          </div>
         </div>
       </div>
       <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
