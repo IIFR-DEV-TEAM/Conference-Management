@@ -27,7 +27,7 @@ export default function Header() {
                 Testimonials
               </Link>
               <Link
-                href="#"
+                href="/pricing"
                 className="text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
               >
                 Pricing
@@ -64,7 +64,7 @@ export default function Header() {
             Testimonials
           </Link>
           <Link
-            href="#"
+            href="/pricing"
             className="text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
           >
             Pricing
