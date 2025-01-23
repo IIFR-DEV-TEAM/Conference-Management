@@ -1,163 +1,106 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { Mail, Lock, ArrowRight } from 'lucide-react'
-import {ReCaptcha} from '@/components/ReCaptcha'
-import { toast } from '@/components/ui/use-toast'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Mail, Lock, ArrowRight, Chrome } from "lucide-react"; 
+import { ReCaptcha } from "@/components/ReCaptcha";
+import { motion } from "framer-motion";
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [recaptchaToken, setRecaptchaToken] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const supabase = createClientComponentClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
     if (!recaptchaToken) {
-      toast({
-        variant: "destructive",
-        title: "Verification required",
-        description: "Please complete the reCAPTCHA verification"
-      })
-      return
+      setError("Please complete the reCAPTCHA");
+      return;
     }
 
-    setIsLoading(true)
-    
     try {
-      // First verify the captcha
-      const captchaResponse = await fetch('/api/captcha', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: recaptchaToken }),
-      })
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      const captchaData = await captchaResponse.json()
+      if (error) throw error;
 
-      if (!captchaData.success) {
-        toast({
-          variant: "destructive",
-          title: "Verification failed",
-          description: "ReCAPTCHA verification failed. Please try again."
-        })
-        return
-      }
-
-      // If captcha is verified, proceed with login
-      const loginResponse = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const loginData = await loginResponse.json()
-
-      if (loginResponse.ok) {
-        toast({
-          title: "Success",
-          description: "Logged in successfully"
-        })
-        router.push('/')
-      } else {
-        throw new Error(loginData.message || 'Login failed')
-      }
+      router.push("/dashboard");
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred during login"
-      })
-    } finally {
-      setIsLoading(false)
+      setError("Failed to log in. Please check your credentials and try again.");
     }
-  }
+  };
 
   const handleRecaptchaVerify = (token: string | null) => {
-    setRecaptchaToken(token)
-  }
+    setRecaptchaToken(token || '');
+    setError(null);
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white bg-cover bg-center" style={{backgroundImage: "url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')"}}>
-      <Card className="w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-xl transition-all duration-300 ease-in-out hover:shadow-2xl">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Sign in to your account</CardTitle>
-          <CardDescription className="text-center">Enter your email and password to access your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  className="pl-10"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  className="pl-10"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-            <ReCaptcha onVerify={handleRecaptchaVerify} />
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                "Signing in..."
-              ) : (
-                <>
+    <div className="flex min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-blue-900">
+      <div className="hidden lg:flex flex-1 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')" }} />
+      <div className="flex flex-col items-center justify-center flex-1 p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md"
+        >
+          <Card className="shadow-lg rounded-lg bg-white dark:bg-gray-800 transition-transform transform hover:scale-105">
+            <CardHeader>
+              <CardTitle className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100">Welcome Back</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="email" className="block text-gray-700 dark:text-gray-300">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <Input id="email" type="email" placeholder="m@example.com" className="w-full pl-10 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="password" className="block text-gray-700 dark:text-gray-300">Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <Input id="password" type="password" placeholder="••••••••" className="w-full pl-10 border border-gray-300 rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                  </div>
+                </div>
+                <ReCaptcha onVerify={handleRecaptchaVerify} />
+                {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center justify-center transition duration-200 ease-in-out">
                   Sign in
                   <ArrowRight className="ml-2" size={16} />
-                </>
-              )}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-2">
-            <div className="bg-gray-200 h-px flex-grow" />
-            <span className="text-sm text-gray-400">OR</span>
-            <div className="bg-gray-200 h-px flex-grow" />
-          </div>
-          <Button variant="outline" className="w-full" disabled={isLoading}>
-            Sign in with Google
-          </Button>
-          <div className="text-center text-sm">
-            <Link href="/register" className="text-indigo-600 hover:text-indigo-800 transition-colors">
-              Don't have an account? Sign up
-            </Link>
-          </div>
-        </CardFooter>
-      </Card>
+                </Button>
+              </form>
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-4 pt-4">
+              <div className="flex items-center">
+                <div className="bg-gray-300 dark:bg-gray-600 h-px flex-grow" />
+                <span className="mx-2 text-sm text-gray-500 dark:text-gray-400">OR</span>
+                <div className="bg-gray-300 dark:bg-gray-600 h-px flex-grow" />
+              </div>
+              <Button variant="outline" className="w-full border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md flex items-center justify-center transition duration-200 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-700">
+                <Chrome className="mr-2" size={16} />
+                Sign in with Google
+              </Button>
+              <div className="text-center text-sm">
+                <Link href="/register" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Don't have an account? Sign up</Link>
+              </div>
+            </CardFooter>
+          </Card>
+        </motion.div>
+      </div>
     </div>
-  )
+  );
 }
