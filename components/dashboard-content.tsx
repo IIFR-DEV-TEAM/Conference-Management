@@ -15,7 +15,7 @@ export default function DashboardContent() {
 
   return (
     <Tabs defaultValue="my-conferences" className="space-y-4">
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <TabsList>
           <TabsTrigger value="my-conferences">My Conferences</TabsTrigger>
           <TabsTrigger value="papers">Papers</TabsTrigger>

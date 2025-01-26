@@ -3,12 +3,12 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { User, Mail, Lock, ArrowRight } from "lucide-react"
+import { User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react"
 import { ReCaptcha } from "@/components/ReCaptcha"
 import { motion } from "framer-motion"
 
@@ -18,13 +18,16 @@ export default function Register() {
   const [password, setPassword] = useState("")
   const [recaptchaToken, setRecaptchaToken] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const supabase = createClientComponentClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
     if (!recaptchaToken) {
       setError("Please complete the reCAPTCHA")
+      setIsLoading(false)
       return
     }
     // TODO: Verify reCAPTCHA token
@@ -34,17 +37,23 @@ export default function Register() {
         email,
         password,
         options: {
-          data: {
-            name,
-          },
+          data: { name },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       })
 
       if (error) throw error
 
-      router.push("/dashboard")
-    } catch (error) {
-      setError("Failed to create user. Please try again.")
+      if (data.user && data.user.identities && data.user.identities.length === 0) {
+        throw new Error("User already registered. Please sign in.")
+      }
+
+      localStorage.setItem("verificationEmail", email)
+      router.push("/verify-otp")
+    } catch (error: any) {
+      setError(error.message || "Failed to create user. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -119,19 +128,31 @@ export default function Register() {
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                     <Input
                       id="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                      className="pl-10 pr-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
                   </div>
                 </div>
                 <ReCaptcha onVerify={handleRecaptchaVerify} />
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  Sign up
+                
+                {error && (
+                  <p className="text-sm text-red-500" role="alert">
+                    {error}
+                  </p>
+                )}
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={isLoading}>
+                  {isLoading ? "Processing..." : "Sign up"}
                   <ArrowRight className="ml-2" size={16} />
                 </Button>
               </form>

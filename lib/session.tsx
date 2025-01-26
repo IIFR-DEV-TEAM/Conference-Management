@@ -1,9 +1,8 @@
 import { cookies, headers } from "next/headers"
-import { createServerComponentSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 
 export async function getSession() {
-  const supabase = createServerComponentSupabaseClient({
-    headers: () => headers(),
+  const supabase = createServerComponentClient({
     cookies: () => cookies()
   })
   
@@ -21,8 +20,7 @@ export async function getSession() {
 }
 
 export async function getUserDetails() {
-  const supabase = createServerComponentSupabaseClient({
-    headers: () => headers(),
+  const supabase = createServerComponentClient({
     cookies: () => cookies()
   })
   
@@ -40,8 +38,7 @@ export async function getUserDetails() {
 }
 
 export async function clearSession() {
-    const supabase = createServerComponentSupabaseClient({
-      headers: () => headers(),
+    const supabase = createServerComponentClient({
       cookies: () => cookies()
     })
   
