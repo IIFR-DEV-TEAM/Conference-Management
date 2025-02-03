@@ -3,7 +3,8 @@ import "./globals.css"
 import { ThemeProvider } from "@/lib/theme-provider"
 import { createClient } from "@/lib/supabase/server"
 import type { Metadata } from "next"
-import type React from "react" // Added import for React
+import type React from "react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -27,6 +28,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased min-h-screen bg-background text-foreground`}>
         <ThemeProvider>{children}</ThemeProvider>
+        <SpeedInsights/>
       </body>
     </html>
   )
