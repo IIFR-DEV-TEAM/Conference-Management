@@ -1,27 +1,28 @@
-import type { Metadata } from "next"
-import DashboardContent from "@/components/dashboard-content"
-import { DashboardHeader } from "@/components/dashboard-header"
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
+import { DashboardTabs } from "./dashboard-tabs"
 
-export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Conference Management Dashboard",
-}
+export default async function DashboardPage() {
+  const supabase = createClient()
 
-export default function DashboardPage() {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session) {
+    redirect("/login")
+  }
+
   return (
-    <>
-      <div className="hidden flex-col md:flex">
-        <DashboardHeader />
-        <div className="border-b">
-          <div className="flex h-16 items-center px-4">
-            <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          </div>
+    <div className="min-h-screen bg-background">
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground">Conference Dashboard</h1>
+          <p className="text-muted-foreground">Manage your conferences and registrations</p>
         </div>
-        <div className="flex-1 space-y-4 p-8 pt-6">
-          <DashboardContent />
-        </div>
-      </div>
-    </>
+        <DashboardTabs />
+      </main>
+    </div>
   )
 }
 
