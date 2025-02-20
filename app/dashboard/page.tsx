@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { DashboardTabs } from "./dashboard-tabs"
+import { LogoutButton } from "@/components/logout-button"
+import { ThemeSelector } from "@/components/theme-selector"
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -15,11 +17,16 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Conference Dashboard</h1>
-          <p className="text-muted-foreground">Manage your conferences and registrations</p>
+      <header className="border-b border-border">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+          <div className="flex items-center gap-4">
+            <ThemeSelector />
+            <LogoutButton />
+          </div>
         </div>
+      </header>
+      <main className="container mx-auto px-4 py-8">
         <DashboardTabs />
       </main>
     </div>

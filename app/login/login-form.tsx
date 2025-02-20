@@ -3,7 +3,8 @@
 import { createClient } from "@/lib/supabase/client"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import type React from "react" // Added import for React
+import type React from "react"
+import { FcGoogle } from "react-icons/fc"
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("")
@@ -32,6 +33,20 @@ export const LoginForm = () => {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+      if (error) throw error
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred with Google Sign In")
     }
   }
 
@@ -75,6 +90,24 @@ export const LoginForm = () => {
         className="w-full py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
       >
         {loading ? "Signing in..." : "Sign in"}
+      </button>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={handleGoogleSignIn}
+        className="w-full py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-2"
+      >
+        <FcGoogle className="w-5 h-5" />
+        Sign in with Google
       </button>
     </form>
   )
