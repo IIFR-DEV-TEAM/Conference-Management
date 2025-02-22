@@ -16,11 +16,17 @@ export const VerificationForm = () => {
   const supabase = createClient()
 
   useEffect(() => {
-    const getSession = async () => {
-      const { data } = await supabase.auth.getSession()
-      setEmail(data.session?.user.email ?? null)
+    const storedEmail = sessionStorage.getItem("verificationEmail")
+    if (storedEmail) {
+      setEmail(storedEmail)
+    } else {
+      // Fallback to getting email from session
+      const getSession = async () => {
+        const { data } = await supabase.auth.getSession()
+        setEmail(data.session?.user.email ?? null)
+      }
+      getSession()
     }
-    getSession()
   }, [supabase.auth])
 
   useEffect(() => {
@@ -52,6 +58,8 @@ export const VerificationForm = () => {
 
       if (error) throw error
 
+      // Clear the stored email from session storage
+      sessionStorage.removeItem("verificationEmail")
       router.push("/dashboard")
     } catch (error) {
       setError(error instanceof Error ? error.message : "Verification failed")
@@ -68,7 +76,7 @@ export const VerificationForm = () => {
 
     setError(null)
     setResendDisabled(true)
-    setResendCountdown(60)
+    setResendCountdown(120) // Set to 2 minutes (120 seconds)
 
     try {
       const { error } = await supabase.auth.resend({
@@ -81,12 +89,26 @@ export const VerificationForm = () => {
       setError("A new verification code has been sent to your email.")
     } catch (error) {
       setError(error instanceof Error ? error.message : "Failed to resend verification code")
+      setResendDisabled(false)
+      setResendCountdown(0)
     }
+  }
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = seconds % 60
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {error && <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm">{error}</div>}
+      {error && (
+        <div
+          className={`p-3 rounded-md ${error.startsWith("A new verification code") ? "bg-green-100 text-green-800" : "bg-destructive/10 text-destructive"} text-sm`}
+        >
+          {error}
+        </div>
+      )}
 
       <div className="space-y-2">
         <label htmlFor="code" className="text-sm font-medium">
@@ -120,7 +142,7 @@ export const VerificationForm = () => {
           disabled={resendDisabled}
           className="text-sm text-primary hover:underline disabled:opacity-50"
         >
-          {resendCountdown > 0 ? `Resend code in ${resendCountdown}s` : "Resend verification code"}
+          {resendCountdown > 0 ? `Resend code in ${formatTime(resendCountdown)}` : "Resend verification code"}
         </button>
       </div>
     </form>
