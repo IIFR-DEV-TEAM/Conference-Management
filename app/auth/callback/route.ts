@@ -1,16 +1,30 @@
-import { createClient } from "@/lib/supabase/server"
-import { NextResponse } from "next/server"
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
-  const code = requestUrl.searchParams.get("code")
+  const code = requestUrl.searchParams.get('code')
+  const supabase = createClient()
 
-  if (code) {
-    const supabase = createClient()
-    await supabase.auth.exchangeCodeForSession(code)
+  // Check existing session
+  const { data: { session } } = await supabase.auth.getSession()
+  
+  if (session) {
+    return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
   }
 
-  // Redirect to the dashboard after successful authentication
-  return NextResponse.redirect(new URL("/dashboard", request.url))
-}
+  if (!code) {
+    return NextResponse.redirect(new URL('/', requestUrl.origin))
+  }
 
+  try {
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (error) throw error
+    return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
+  } catch (error) {
+    console.error('Auth error:', error)
+    return NextResponse.redirect(
+      new URL('/?error=Authentication failed', requestUrl.origin)
+    )
+  }
+}
