@@ -38,6 +38,7 @@ export const LoginForm = () => {
 
   const handleGoogleSignIn = async () => {
     try {
+      console.log(/window.location.origin/, window.location.origin)
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
