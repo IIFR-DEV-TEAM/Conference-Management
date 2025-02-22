@@ -27,19 +27,19 @@ export const Navbar = () => {
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-lg shadow-lg" : "bg-background/50 backdrop-blur-xs"
+        scrolled ? "bg-background/80 backdrop-blur-lg shadow-lg" : "bg-background/50 backdrop-blur-sm"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link
             href="/"
-            className="text-2xl font-bold bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+            className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
           >
             ConferenceHub
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-4 lg:gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -56,24 +56,27 @@ export const Navbar = () => {
             <ThemeSelector />
             <Link
               href="/login"
-              className="px-4 py-2 bg-background text-foreground border border-input hover:bg-accent transition-all hover:shadow-lg hover:-translate-y-0.5"
+              className="px-3 py-2 text-sm bg-background text-foreground border border-input hover:bg-accent transition-all hover:shadow-lg hover:-translate-y-0.5"
             >
               Sign In
             </Link>
             <Link
               href="/register"
-              className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:-translate-y-0.5"
+              className="px-3 py-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg hover:-translate-y-0.5"
             >
               Register
             </Link>
           </div>
 
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-foreground hover:text-primary transition-colors"
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="flex items-center md:hidden">
+            <ThemeSelector />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 text-foreground hover:text-primary transition-colors"
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -95,10 +98,7 @@ export const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            <div className="flex items-center justify-between py-2 border-t border-border">
-              <ThemeSelector />
-            </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 pt-4 border-t border-border">
               <Link
                 href="/login"
                 className="w-full py-2 text-center bg-background text-foreground border border-input hover:bg-accent transition-all"

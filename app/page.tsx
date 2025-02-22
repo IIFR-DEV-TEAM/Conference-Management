@@ -26,18 +26,18 @@ export default function Home() {
           <div className="absolute inset-0 bg-grid-small-black/[0.02] dark:bg-grid-small-white/[0.02]" />
 
           {/* Gradient Overlays */}
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-xs" />
-          <div className="absolute inset-0 bg-linear-to-b from-background/20 via-background/50 to-background" />
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/50 to-background" />
 
           {/* Hero Content */}
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="text-left space-y-8">
                 <div className="space-y-4 animate-slide-up">
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-foreground">
                     Transform Your Conference Experience
                   </h1>
-                  <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl">
+                  <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl">
                     Elevate your events with our cutting-edge conference management platform. Seamless organization,
                     real-time collaboration, and unforgettable experiences.
                   </p>
@@ -46,7 +46,7 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     href="/register"
-                    className="px-6 py-3 bg-primary text-primary-foreground hover:translate-y-[-2px] hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 ease-out group"
+                    className="px-6 py-3 bg-primary text-primary-foreground hover:translate-y-[-2px] hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 ease-out group text-center"
                   >
                     <span className="flex items-center justify-center gap-2">
                       Get Started Free
@@ -55,7 +55,7 @@ export default function Home() {
                   </Link>
                   <Link
                     href="#features"
-                    className="px-6 py-3 border border-border bg-card text-card-foreground hover:bg-accent hover:translate-y-[-2px] transition-all duration-300 ease-out"
+                    className="px-6 py-3 border border-border bg-card text-card-foreground hover:bg-accent hover:translate-y-[-2px] transition-all duration-300 ease-out text-center"
                   >
                     Learn More
                   </Link>
@@ -68,7 +68,7 @@ export default function Home() {
                       key={index}
                       className="p-4 bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 ease-out group"
                     >
-                      <div className="text-2xl font-bold text-primary group-hover:scale-105 transition-transform duration-300">
+                      <div className="text-xl sm:text-2xl font-bold text-primary group-hover:scale-105 transition-transform duration-300">
                         {stat.value}
                       </div>
                       <div className="text-sm text-muted-foreground">{stat.label}</div>
@@ -78,8 +78,8 @@ export default function Home() {
               </div>
 
               {/* Hero Image */}
-              <div className="relative h-[500px] w-full hidden lg:block animate-float">
-                <div className="absolute inset-0 bg-linear-to-tr from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
+              <div className="relative h-[300px] sm:h-[400px] lg:h-[500px] w-full hidden lg:block animate-float">
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
                   <Image
                     src="/conference-dashboard.webp"
                     alt="Conference Dashboard"
@@ -93,7 +93,7 @@ export default function Home() {
           </div>
 
           {/* Decorative Elements */}
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-border to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
         </section>
 
         {/* Features Section */}
@@ -105,7 +105,7 @@ export default function Home() {
 
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Everything You Need</h2>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">Everything You Need</h2>
               <p className="text-muted-foreground">
                 Comprehensive tools and features to make your conference a success
               </p>
@@ -124,7 +124,7 @@ export default function Home() {
                       <feature.icon className="h-6 w-6 text-primary group-hover:scale-125 transition-transform duration-300" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors duration-300">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors duration-300">
                     {feature.title}
                   </h3>
                   <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">
@@ -146,8 +146,8 @@ export default function Home() {
         <section className="py-24 bg-background border-b border-border relative overflow-hidden">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className="relative h-[400px] order-2 lg:order-1">
-                <div className="absolute inset-0 bg-linear-to-tr from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
+              <div className="relative h-[300px] sm:h-[400px] order-2 lg:order-1">
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
                   <Image
                     src="/integrations.webp"
                     alt="Platform Integrations"
@@ -157,8 +157,8 @@ export default function Home() {
                 </div>
               </div>
               <div className="space-y-6 order-1 lg:order-2">
-                <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Seamless Integrations</h2>
-                <p className="text-muted-foreground text-lg">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">Seamless Integrations</h2>
+                <p className="text-muted-foreground text-base sm:text-lg">
                   Connect with your favorite tools and services. Our platform integrates with leading software solutions
                   to streamline your workflow.
                 </p>
@@ -166,7 +166,7 @@ export default function Home() {
                   {integrations.map((integration, index) => (
                     <div
                       key={index}
-                      className="p-4 bg-card border border-border rounded-sm hover:border-primary/50 transition-all duration-300 flex items-center gap-2 group"
+                      className="p-4 bg-card border border-border rounded hover:border-primary/50 transition-all duration-300 flex items-center gap-2 group"
                     >
                       <integration.icon className="h-5 w-5 text-primary group-hover:scale-110 transition-transform duration-300" />
                       <span className="text-sm font-medium text-foreground">{integration.name}</span>
@@ -182,7 +182,7 @@ export default function Home() {
         <section id="testimonials" className="py-24 bg-background border-b border-border">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Loved by Event Organizers</h2>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">Loved by Event Organizers</h2>
               <p className="text-muted-foreground">See what our customers have to say about their experience</p>
             </div>
 
@@ -198,7 +198,7 @@ export default function Home() {
                         src={testimonial.avatar || "/placeholder.svg"}
                         alt={testimonial.name}
                         fill
-                        className="object-cover"
+                        className="object-cover rounded-full"
                       />
                     </div>
                     <div>
@@ -230,7 +230,9 @@ export default function Home() {
         <section id="pricing" className="py-24 bg-muted/50 dark:bg-card/50 border-b border-border">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Simple, Transparent Pricing</h2>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
+                Simple, Transparent Pricing
+              </h2>
               <p className="text-muted-foreground">Choose the perfect plan for your needs</p>
             </div>
 
@@ -281,7 +283,7 @@ export default function Home() {
         <section id="faq" className="py-24 bg-background border-b border-border">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground">Frequently Asked Questions</h2>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">Frequently Asked Questions</h2>
               <p className="text-muted-foreground">Find answers to common questions about our platform</p>
             </div>
 
@@ -308,10 +310,10 @@ export default function Home() {
           <div className="absolute inset-0 bg-grid-small-white/[0.2] pointer-events-none" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="max-w-3xl mx-auto text-center space-y-8">
-              <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-foreground">
                 Ready to Transform Your Conference Management?
               </h2>
-              <p className="text-primary-foreground/80 text-lg">
+              <p className="text-primary-foreground/80 text-base sm:text-lg">
                 Join thousands of successful event organizers who trust our platform
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -283,7 +283,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setThemeStyle(savedStyle)
       applyTheme(savedStyle, savedTheme || theme)
     }
-  }, [theme]) // Added theme to dependencies
+  }, [theme])
 
   const applyTheme = (style: ThemeStyle, mode: Theme) => {
     const root = document.documentElement
