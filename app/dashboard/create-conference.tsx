@@ -22,12 +22,11 @@ export function CreateConference() {
     const description = formData.get("description") as string
     const date = formData.get("date") as string
     const location = formData.get("location") as string
-    const image_url = formData.get("image_url") as string
     const link = formData.get("link") as string
 
     try {
       if (devMode) {
-        console.log("Conference created (Dev Mode):", { title, description, date, location, image_url, link })
+        console.log("Conference created (Dev Mode):", { title, description, date, location, link })
         router.refresh()
         e.currentTarget.reset()
       } else {
@@ -44,7 +43,6 @@ export function CreateConference() {
             description,
             start_date: date,
             location,
-            image_url,
             link,
             organizer_id: session.user.id,
             attendees: [session.user.id],
@@ -144,18 +142,6 @@ export function CreateConference() {
         />
       </div>
 
-      <div className="space-y-2">
-        <label htmlFor="image_url" className="text-sm font-medium text-foreground">
-          Cover Image URL
-        </label>
-        <input
-          id="image_url"
-          name="image_url"
-          type="url"
-          className="w-full p-2 rounded-md border border-input bg-background text-foreground"
-          placeholder="Enter cover image URL (optional)"
-        />
-      </div>
 
       <button
         type="submit"
