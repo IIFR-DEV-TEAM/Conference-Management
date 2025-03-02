@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { DashboardTabs } from "./dashboard-tabs"
 import { LogoutButton } from "@/components/logout-button"
 import { ThemeSelector } from "@/components/theme-selector"
+import { checkAndFixPermissions } from "@/lib/supabase/permissions"
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -14,6 +15,9 @@ export default async function DashboardPage() {
   if (!session) {
     redirect("/login")
   }
+
+  // Check and fix permissions
+  await checkAndFixPermissions()
 
   return (
     <div className="min-h-screen bg-background">

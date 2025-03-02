@@ -3,13 +3,14 @@
 import { createClient } from "@/lib/supabase/client"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import type React from "react" // Added import for React
+import type React from "react"
 
 export function CreateConference() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createClient()
+  const devMode = process.env.NEXT_PUBLIC_DEV_MODE === "true"
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -22,28 +23,46 @@ export function CreateConference() {
     const date = formData.get("date") as string
     const location = formData.get("location") as string
     const image_url = formData.get("image_url") as string
+    const link = formData.get("link") as string
 
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
+      if (devMode) {
+        console.log("Conference created (Dev Mode):", { title, description, date, location, image_url, link })
+        router.refresh()
+        e.currentTarget.reset()
+      } else {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
 
-      if (!session) throw new Error("Not authenticated")
+        if (!session) throw new Error("Not authenticated")
 
-      const { error } = await supabase.from("conferences").insert({
-        title,
-        description,
-        date,
-        location,
-        image_url,
-        organizer_id: session.user.id,
-        attendees: [session.user.id],
-      })
+        const { data, error } = await supabase
+          .from("conferences")
+          .insert({
+            title,
+            description,
+            start_date: date,
+            location,
+            image_url,
+            link,
+            organizer_id: session.user.id,
+            attendees: [session.user.id],
+            user_status: "admin",
+          })
+          .select()
 
-      if (error) throw error
+        if (error) throw error
 
-      router.refresh()
-      e.currentTarget.reset()
+        if (data && data.length > 0) {
+          console.log("Conference created successfully:", data[0])
+        } else {
+          throw new Error("Conference was not created")
+        }
+
+        router.refresh()
+        e.currentTarget.reset()
+      }
     } catch (error) {
       console.error("Error creating conference:", error)
       setError(error instanceof Error ? error.message : "An error occurred")
@@ -86,7 +105,7 @@ export function CreateConference() {
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="date" className="text-sm font-medium text-foreground">
-            Date
+            Start Date
           </label>
           <input
             id="date"
@@ -109,6 +128,20 @@ export function CreateConference() {
             placeholder="Enter conference location"
           />
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="link" className="text-sm font-medium text-foreground">
+          Conference Link
+        </label>
+        <input
+          id="link"
+          name="link"
+          type="url"
+          required
+          className="w-full p-2 rounded-md border border-input bg-background text-foreground"
+          placeholder="Enter conference website URL"
+        />
       </div>
 
       <div className="space-y-2">

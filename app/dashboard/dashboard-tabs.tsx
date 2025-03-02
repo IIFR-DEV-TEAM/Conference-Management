@@ -1,16 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { MyConferences } from "./my-conference"
 import { CreateConference } from "./create-conference"
+import { ConferenceTable } from "./conference-table"
 
-type Tab = "my-conferences" | "create"
+type Tab = "create" | "table"
 
 export function DashboardTabs() {
-  const [activeTab, setActiveTab] = useState<Tab>("my-conferences")
+  const [activeTab, setActiveTab] = useState<Tab>("table")
 
   const tabs = [
-    { id: "my-conferences", label: "My Conferences" },
+    { id: "table", label: "Conference Table" },
     { id: "create", label: "Create Conference" },
   ]
 
@@ -34,7 +34,10 @@ export function DashboardTabs() {
         </div>
       </div>
 
-      <div className="mt-6">{activeTab === "my-conferences" ? <MyConferences /> : <CreateConference />}</div>
+      <div className="mt-6">
+        {activeTab === "table" && <ConferenceTable />}
+        {activeTab === "create" && <CreateConference />}
+      </div>
     </div>
   )
 }

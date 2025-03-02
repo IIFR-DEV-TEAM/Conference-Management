@@ -15,8 +15,7 @@ type Conference = {
   image_url: string
 }
 
-export function MyConferences() {
-  const [conferences, setConferences] = useState<Conference[]>([])
+export function MyConferences() {  const [conferences, setConferences] = useState<Conference[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
@@ -110,4 +109,3 @@ export function MyConferences() {
   )
 }
 
-    

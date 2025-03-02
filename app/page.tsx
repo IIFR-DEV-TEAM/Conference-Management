@@ -80,13 +80,14 @@ export default function Home() {
               {/* Hero Image */}
               <div className="relative h-[300px] sm:h-[400px] lg:h-[500px] w-full hidden lg:block animate-float">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
-                  <Image
-                    src="/conference-dashboard.webp"
-                    alt="Conference Dashboard"
-                    fill
-                    className="object-cover object-center opacity-90 hover:scale-105 transition-transform duration-500"
-                    priority
-                  />
+                // Update the Image component with a remote URL
+                <Image
+                  src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1200"
+                  alt="Conference Dashboard"
+                  fill
+                  className="object-cover object-center opacity-90 hover:scale-105 transition-transform duration-500"
+                  priority
+                />
                 </div>
               </div>
             </div>
@@ -149,7 +150,7 @@ export default function Home() {
               <div className="relative h-[300px] sm:h-[400px] order-2 lg:order-1">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-primary/5 rounded-2xl overflow-hidden">
                   <Image
-                    src="/integrations.webp"
+                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200"
                     alt="Platform Integrations"
                     fill
                     className="object-cover object-center opacity-90 hover:scale-105 transition-transform duration-500"
